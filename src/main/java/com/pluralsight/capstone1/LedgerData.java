@@ -9,7 +9,6 @@ import java.util.List;
 
 public class LedgerData
 {
-    public boolean allTrans;
 
     // Writing system
     public void dataWriter(Transaction transaction) throws IOException
@@ -19,11 +18,11 @@ public class LedgerData
                  BufferedWriter bWriter = new BufferedWriter(fWriter);
                  PrintWriter pWriter = new PrintWriter(bWriter)) {
 
-            pWriter.println(transaction.getDate() + " | " +
-                            transaction.getTime() + " | " +
-                            transaction.getVendor() + " | " +
-                            transaction.getDescription() + " | " +
-                            transaction.getAmount());
+
+            pWriter.append(String.valueOf(transaction.getDate())).append(" | ").append(String.valueOf
+                    (transaction.getTime())).append(" | ").append(transaction.getVendor()).append
+                    (" | ").append(transaction.getDescription()).append(" | ").append(String.valueOf
+                    (transaction.getAmount()));
 
             System.out.println("Ledger successfully updated!");
         } catch (IOException e) {
@@ -37,10 +36,10 @@ public class LedgerData
     //Reading system
     public List<Transaction> dataReader() throws IOException
     {
-        String ledgerFile = "./src/main/resources/transactions.csv";
+        StringBuilder ledgerFile = new StringBuilder("./src/main/resources/transactions.csv");
         List<Transaction> allTrans = new ArrayList<>();
 
-        try (BufferedReader bReader = new BufferedReader(new FileReader(ledgerFile))) {
+        try (BufferedReader bReader = new BufferedReader(new FileReader(String.valueOf(ledgerFile)))) {
 
             String line;
             while ((line = bReader.readLine()) != null) {
@@ -70,9 +69,9 @@ public class LedgerData
         return allTrans;
     }
 
-    public void viewDeposits()
+    public void viewDeposits() throws IOException
     {
-        LedgerData allTrans;
+        List<Transaction> allTrans = dataReader();
         for (Transaction t : allTrans) {
             if (t.getAmount() > 0) {
                 System.out.println(t);
@@ -80,14 +79,16 @@ public class LedgerData
         }
     }
 
-    public void viewPayments()
+    public void viewPayments() throws IOException
     {
-        for (Transaction t : Transaction allTrans) {
+        List<Transaction> allTrans = dataReader();
+        for (Transaction t : allTrans) {
             if (t.getAmount() < 0) {
                 System.out.println(t);
             }
         }
     }
+
     //Ledger reports
 
     static void reportMenu(LedgerData ledgerData)
@@ -112,37 +113,40 @@ public class LedgerData
                     
                     """);
             String userInput = UserMenuApp.scan.nextLine();
+            try {
+                switch (userInput) {
+                    case "1":
+                        ledgerData.viewMonthToDate();
+                        break;
 
-            switch (userInput) {
-                case "1":
-                    ledgerData.viewMonthToDate();
-                    break;
+                    case "2":
+                        ledgerData.viewPreviousMonth();
+                        break;
 
-                case "2":
-                    ledgerData.viewPreviousMonth();
-                    break;
+                    case "3":
+                        ledgerData.viewYearToDate();
+                        break;
 
-                case "3":
-                    ledgerData.viewYearToDate();
-                    break;
+                    case "4":
+                        ledgerData.viewPreviousYear();
+                        break;
 
-                case "4":
-                    ledgerData.viewPreviousYear();
-                    break;
+                    case "5":
+                        System.out.println("Enter vendor name: ");
+                        String vendor = UserMenuApp.scan.nextLine();
+                        ledgerData.vendorSearch(vendor);
+                        break;
 
-                case "5":
-                    System.out.println("Enter vendor name: ");
-                    String vendor = UserMenuApp.scan.nextLine();
-                    ledgerData.vendorSearch(vendor);
-                    break;
+                    case "0":
+                        ledgerReporting = false;
+                        break;
 
-                case "0":
-                    ledgerReporting = false;
-                    break;
-
-                default:
-                    System.out.println("I don't understand." +
-                                       "\nPlease select a valid option.");
+                    default:
+                        System.out.println("I don't understand." +
+                                           "\nPlease select a valid option.");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }
@@ -151,18 +155,16 @@ public class LedgerData
     // Replace "get" with "fetch"
 
 
-    public void viewMonthToDate()
+    public void viewMonthToDate() throws IOException
     {
-        LedgerData allTrans;
+        List<Transaction> allTrans = dataReader();
         LocalDate now = LocalDate.now();
         List<Transaction> monthToDate = new ArrayList<>();
-
-        for (Transaction t : Transaction allTrans) {
+        for (Transaction t : allTrans) {
             if (t.getDate().getMonth() == now.getMonth() && t.getDate().getYear() == now.getYear()) {
                 monthToDate.add(t);
             }
         }
-
         if (monthToDate.isEmpty()) {
             System.out.println("No transactions found for this month.");
         } else {
@@ -172,20 +174,18 @@ public class LedgerData
         }
     }
 
-
-    public void viewPreviousMonth()
+    public void viewPreviousMonth() throws IOException
     {
+        List<Transaction> allTrans = dataReader();
         LocalDate now = LocalDate.now();
         LocalDate startOfLastMonth = now.minusMonths(1).withDayOfMonth(1);
         LocalDate endOfLastMonth = now.withDayOfMonth(1).minusDays(1);
         List<Transaction> previousMonth = new ArrayList<>();
-
-        for (Transaction t : Transaction allTrans) {
+        for (Transaction t : allTrans) {
             if (!t.getDate().isBefore(startOfLastMonth) && !t.getDate().isAfter(endOfLastMonth)) {
                 previousMonth.add(t);
             }
         }
-
         if (previousMonth.isEmpty()) {
             System.out.println("No transactions found for the previous month.");
         } else {
@@ -195,18 +195,16 @@ public class LedgerData
         }
     }
 
-
-    public void viewYearToDate()
+    public void viewYearToDate() throws IOException
     {
+        List<Transaction> allTrans = dataReader();
         LocalDate now = LocalDate.now();
         List<Transaction> yearToDate = new ArrayList<>();
-
-        for (Transaction t : Transaction allTrans) {
+        for (Transaction t : allTrans) {
             if (t.getDate().getYear() == now.getYear()) {
                 yearToDate.add(t);
             }
         }
-
         if (yearToDate.isEmpty()) {
             System.out.println("No transactions found for this year.");
         } else {
@@ -216,19 +214,17 @@ public class LedgerData
         }
     }
 
-
-    public void viewPreviousYear()
+    public void viewPreviousYear() throws IOException
     {
+        List<Transaction> allTrans = dataReader();
         LocalDate now = LocalDate.now();
         int lastYear = now.getYear() - 1;
         List<Transaction> previousYear = new ArrayList<>();
-
-        for (Transaction t : Transaction allTrans) {
+        for (Transaction t : allTrans) {
             if (t.getDate().getYear() == lastYear) {
                 previousYear.add(t);
             }
         }
-
         if (previousYear.isEmpty()) {
             System.out.println("No transactions found for the previous year.");
         } else {
@@ -238,17 +234,15 @@ public class LedgerData
         }
     }
 
-
-    public void vendorSearch(String vendor)
+    public void vendorSearch(String vendor) throws IOException
     {
+        List<Transaction> allTrans = dataReader();
         List<Transaction> vendorTransactions = new ArrayList<>();
-
-        for (Transaction t : Transaction.allTrans) {
+        for (Transaction t : allTrans) {
             if (t.getVendor().equalsIgnoreCase(vendor)) {
                 vendorTransactions.add(t);
             }
         }
-
         if (vendorTransactions.isEmpty()) {
             System.out.println("No transactions found for vendor: " + vendor);
         } else {
@@ -257,11 +251,4 @@ public class LedgerData
             }
         }
     }
-
-
 }
-
-
-
-
-

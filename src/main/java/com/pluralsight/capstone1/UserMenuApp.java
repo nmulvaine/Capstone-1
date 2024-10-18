@@ -8,14 +8,14 @@ import java.util.Scanner;
 
 public class UserMenuApp
 {
-    // Declorations
+    // Declarations
     static LedgerData ledgerData = new LedgerData();
     static Scanner scan = new Scanner(System.in);
     static boolean menuRunning = true;
 
     public static void main(String[] args) throws IOException
     {
-        // Menu topper to avoid reprinting
+        // Menu topper
 
         System.out.println("""
                     *********************
@@ -55,7 +55,7 @@ public class UserMenuApp
 
                 case "L":
                     // Ledger
-                    viewLedger();
+                    ledgerMenu();
                     break;
 
                 case "X":
@@ -90,16 +90,16 @@ public class UserMenuApp
         ledgerData.dataWriter(newTrans);
     }
 
-    static void viewLedger() throws IOException {
-        List<Transaction> allTrans = ledgerData.dataReader();
-        if(allTrans.isEmpty()) {
-            System.out.println("Unable to find transactions.");
-        } else {
-            for (Transaction trans : allTrans) {
-                System.out.println(trans);
-            }
-        }
-    }
+//    static void viewLedger() throws IOException {
+//        List<Transaction> allTrans = ledgerData.dataReader();
+//        if(allTrans.isEmpty()) {
+//            System.out.println("Unable to find transactions.");
+//        } else {
+//            for (Transaction trans : allTrans) {
+//                System.out.println(trans);
+//            }
+//        }
+//    }
 
     static void makeDeposit() throws IOException
     {
@@ -126,14 +126,17 @@ public class UserMenuApp
     }
 // Ledger menu system
 
-    static void ledgerMenu() {
+    static void ledgerMenu()
+    {
         boolean ledgerMenuRunning = true;
 
         while (ledgerMenuRunning) {
             System.out.println("""
+                         Ledger Options
+                    
                     Please Enter an option below:
                     
-                    A: All Entires
+                    A: All Entries
                     
                     D: Deposits Only
                     
@@ -142,34 +145,37 @@ public class UserMenuApp
                     R: Reports
                     
                     H: Home
-                
+                    
                     """);
             String userInput = scan.nextLine().toUpperCase();
+            try {
+                switch (userInput) {
+                    case "A":
+                        System.out.println(ledgerData.dataReader());
+                        break;
 
-            switch (userInput) {
-                case "A":
-                    System.out.println();
-                    break;
+                    case "D":
+                        ledgerData.viewDeposits();
+                        break;
 
-                case "D":
-                    ledgerData.viewDeposits();
-                    break;
+                    case "P":
+                        ledgerData.viewPayments();
+                        break;
 
-                case "P":
-                    ledgerData.viewPayments();
-                    break;
+                    case "R":
+                        LedgerData.reportMenu(ledgerData);
+                        break;
 
-                case "R":
-                    LedgerData.reportMenu(ledgerData);
-                    break;
+                    case "H":
+                        ledgerMenuRunning = false;
+                        break;
 
-                case "H":
-                    ledgerMenuRunning = false;
-                    break;
-
-                default:
-                    System.out.println("I don't understand." +
-                                       "\nPlease select a valid option.");
+                    default:
+                        System.out.println("I don't understand." +
+                                           "\nPlease select a valid option.");
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
         }
     }

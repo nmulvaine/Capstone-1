@@ -84,39 +84,34 @@ public class Transaction
         this.amount = amount;
     }
 
-    public Transaction userPrompt() throws InterruptedException
-    {
-        // Primary method for Transaction class
-        // Need to get vendor, description, amount from user
-        // Time and date are from the system
-
-        System.out.println("Please provide the following information for " +
-                           "\nThe provided information will be added to your ledger.");
-        Thread.sleep(1500);
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
-
-        // Collect user amounts
-        System.out.println("Vendor: ");
-        this.vendor = UserMenuApp.scan.nextLine();
-
-        System.out.println("Description: ");
-        this.description = UserMenuApp.scan.nextLine();
-
-        System.out.println("Amount: ");
-        this.amount = Double.parseDouble(UserMenuApp.scan.nextLine());
-
-        this.date = LocalDate.now();
-        this.time = LocalTime.now();
-
-        return this;
-    }
+//    public Transaction userPrompt() throws InterruptedException
+//    {
+//        // Primary method for Transaction class
+//        // Need to get vendor, description, amount from user
+//        // Time and date are from the system
+//
+//        System.out.println("Please provide the following information for " +
+//                           "\nThe provided information will be added to your ledger.");
+//        Thread.sleep(1500);
+//        System.out.print("\033[H\033[2J");
+//        System.out.flush();
+//
+//        // Collect user amounts
+//        System.out.println("Vendor: ");
+//        this.vendor = UserMenuApp.scan.nextLine();
+//
+//        System.out.println("Description: ");
+//        this.description = UserMenuApp.scan.nextLine();
+//
+//        System.out.println("Amount: ");
+//        this.amount = Double.parseDouble(UserMenuApp.scan.nextLine());
+//
+//        this.date = LocalDate.now();
+//        this.time = LocalTime.now();
+//
+//        return this;
+//    }
     // string feeds into dataWriter
-
-    public static void setMenuApp(UserMenuApp menuApp)
-    {
-        Transaction.menuApp = menuApp;
-    }
 
     @Override
     public String toString()
