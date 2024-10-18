@@ -5,6 +5,9 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Scanner;
 
+// Could use class to make "Utilities" class
+// for future project library
+
 public class UserMenuApp
 {
     // Declarations
@@ -71,6 +74,8 @@ public class UserMenuApp
         }
     }
 
+    // Data grab for Transaction
+
     static void makeTransaction (String type) throws IOException
     {
         System.out.println(type + " selected." );
@@ -100,9 +105,12 @@ public class UserMenuApp
 //        }
 //    }
 
+    // Data grab for Deposit
+    // Could have combined both data
+    // grabs into one method with if()
+
     static void makeDeposit() throws IOException
     {
-
 
         System.out.println("Vendor: ");
         String vendor = scan.nextLine();
@@ -123,7 +131,8 @@ public class UserMenuApp
 
 
     }
-// Ledger menu system
+    // Ledger menu system
+    // Calls ledger data from class
 
     static void ledgerMenu()
     {

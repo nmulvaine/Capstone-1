@@ -16,13 +16,23 @@ This application is built mainly upon three classes, LedgerData, Transaction, an
 
 ![MenuApp Switch Statement](./src/main/resources/images/menuapp-switch.png)
 
+—————————————————————————————————————————————————————————————————————————————————
+
 ![Parsing Statement](./src/main/resources/images/parsing.png)
+
+—————————————————————————————————————————————————————————————————————————————————
 
 ![DataWriter to Append](./src/main/resources/images/dataWriter-append.png)
 
+—————————————————————————————————————————————————————————————————————————————————
+
 ![Declarations Class Call](./src/main/resources/images/declarations-class-call.png)
 
+—————————————————————————————————————————————————————————————————————————————————
+
 ![Opening Menu](./src/main/resources/images/opening-menu.png)
+
+—————————————————————————————————————————————————————————————————————————————————
 
 ![Parsing](./src/main/resources/images/parsing.png)
 

@@ -6,11 +6,17 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+//
+// Could use better way for keeping
+// track of dataWriter/ dataReader/ Transaction/ allTrans
+//
 
 public class LedgerData
 {
 
     // Writing system
+    // Try/Catch
+
     public void dataWriter(Transaction transaction) throws IOException
     {
         try
@@ -33,7 +39,9 @@ public class LedgerData
     }
 
 
-    //Reading system
+    // Reading system
+    // Try/Catch
+
     public List<Transaction> dataReader() throws IOException
     {
         StringBuilder ledgerFile = new StringBuilder("./src/main/resources/transactions.csv");
@@ -113,6 +121,9 @@ public class LedgerData
                     
                     """);
             String userInput = UserMenuApp.scan.nextLine();
+
+            // Satisfied with method calling
+
             try {
                 switch (userInput) {
                     case "1":
@@ -153,6 +164,7 @@ public class LedgerData
 
     // Ledger data sorting
     // Replace "get" with "fetch"
+    // Would like to condense in future
 
 
     public void viewMonthToDate() throws IOException

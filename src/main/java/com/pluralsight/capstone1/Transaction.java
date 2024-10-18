@@ -6,7 +6,7 @@ import java.time.LocalTime;
 
 //
 // Need to have deposit and transaction
-// getting user data to plug into vars
+// Getting user data to plug into vars
 //
 
 
@@ -31,7 +31,8 @@ public class Transaction
     }
 
 
-    //getter and setters
+    // Getters and Setters
+    // Clean out unused
 
     public LocalDate getDate()
     {
@@ -111,7 +112,7 @@ public class Transaction
 //
 //        return this;
 //    }
-    // string feeds into dataWriter
+
 
     @Override
     public String toString()
