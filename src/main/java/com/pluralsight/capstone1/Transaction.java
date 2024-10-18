@@ -1,21 +1,27 @@
 package com.pluralsight.capstone1;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+
+//
+// Need to have deposit and transaction
+// getting user data to plug into vars
+//
+
 
 public class Transaction
 {
-    //fields
-    LocalDateTime time;
-    LocalDateTime date;
-    String vendor;
-    String description;
-    double amount;
+    //static LedgerData ledgerData;
+    private static UserMenuApp menuApp;
+    private LocalTime time;
+    private LocalDate date;
+    private String vendor;
+    private String description;
+    private double amount;
 
-    public Transaction(){
 
-    }
-
-    public Transaction(LocalDateTime time, LocalDateTime date, String vendor, String description, double amount)
+    public Transaction(LocalDate date, LocalTime time, String vendor, String description, double amount)
     {
         this.time = time;
         this.date = date;
@@ -24,30 +30,32 @@ public class Transaction
         this.amount = amount;
     }
 
+
     //getter and setters
 
-    public LocalDateTime getTime()
-    {
-        return time;
-    }
-
-    public void setTime(LocalDateTime time)
-    {
-        this.time = time;
-    }
-
-    public LocalDateTime getDate()
+    public LocalDate getDate()
     {
         return date;
     }
 
-    public void setDate(LocalDateTime date)
+    public void setDate(LocalDate date)
     {
         this.date = date;
     }
 
+    public LocalTime getTime()
+    {
+        return time;
+    }
+
+    public void setTime(LocalTime time)
+    {
+        this.time = time;
+    }
+
     public String getVendor()
     {
+
         return vendor;
     }
 
@@ -76,7 +84,39 @@ public class Transaction
         this.amount = amount;
     }
 
-    // stirng
+    public Transaction userPrompt() throws InterruptedException
+    {
+        // Primary method for Transaction class
+        // Need to get vendor, description, amount from user
+        // Time and date are from the system
+
+        System.out.println("Please provide the following information for " +
+                           "\nThe provided information will be added to your ledger.");
+        Thread.sleep(1500);
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+
+        // Collect user amounts
+        System.out.println("Vendor: ");
+        this.vendor = UserMenuApp.scan.nextLine();
+
+        System.out.println("Description: ");
+        this.description = UserMenuApp.scan.nextLine();
+
+        System.out.println("Amount: ");
+        this.amount = Double.parseDouble(UserMenuApp.scan.nextLine());
+
+        this.date = LocalDate.now();
+        this.time = LocalTime.now();
+
+        return this;
+    }
+    // string feeds into dataWriter
+
+    public static void setMenuApp(UserMenuApp menuApp)
+    {
+        Transaction.menuApp = menuApp;
+    }
 
     @Override
     public String toString()
@@ -88,5 +128,7 @@ public class Transaction
                ", description='" + description + '\'' +
                ", amount=" + amount +
                '}';
+
     }
+
 }

@@ -1,17 +1,20 @@
 package com.pluralsight.capstone1;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserMenuApp
 {
-    static Scanner scan;
+    // Declorations
+    static LedgerData ledgerData = new LedgerData();
+    static Scanner scan = new Scanner(System.in);
+    static boolean menuRunning = true;
 
     public static void main(String[] args) throws IOException
     {
-        ReadSystem readSystem = new ReadSystem();
-        boolean menuRunning = true;
-        scan = new Scanner(System.in);
         // Menu topper to avoid reprinting
 
         System.out.println("""
@@ -27,32 +30,33 @@ public class UserMenuApp
                     
                     Please Select an option.
                     
-                    D) Add Deposit
+                    D: Add Deposit
                     
-                    P) Make Payment
+                    P: Make Payment
                     
-                    L) View Ledger
+                    L: View Ledger
                     
-                    X) Exit
+                    X: Exit
+                    
                     """);
-            String userInput = scan.nextLine();
+            String userInput = scan.nextLine().toUpperCase();
 
             switch (userInput) {
                 case "D":
+                    // Deposit
 
-                    //call makeDeposit method
-
-                    return;
+                    makeDeposit();
+                    break;
 
                 case "P":
-
-                    return;
+                    // Payment
+                    makeTransaction("Payment");
+                    break;
 
                 case "L":
-                    System.out.println(readSystem.readData());
-
-
-                    return ;
+                    // Ledger
+                    viewLedger();
+                    break;
 
                 case "X":
                     menuRunning = false;
@@ -68,20 +72,107 @@ public class UserMenuApp
         }
     }
 
-    static void makeDeposit()
+    static void makeTransaction (String type) throws IOException
+    {
+        System.out.println(type + " selected." );
+
+        System.out.println("Vendor: ");
+        String vendor = scan.nextLine();
+
+        System.out.println("Description: ");
+        String description = scan.nextLine();
+
+        System.out.println("Amount: ");
+        double amount = Double.parseDouble(scan.nextLine().trim());
+
+        Transaction newTrans = new Transaction(LocalDate.now(), LocalTime.now(),
+                vendor, description, amount);
+        ledgerData.dataWriter(newTrans);
+    }
+
+    static void viewLedger() throws IOException {
+        List<Transaction> allTrans = ledgerData.dataReader();
+        if(allTrans.isEmpty()) {
+            System.out.println("Unable to find transactions.");
+        } else {
+            for (Transaction trans : allTrans) {
+                System.out.println(trans);
+            }
+        }
+    }
+
+    static void makeDeposit() throws IOException
     {
 
-        System.out.println("deposit amount");
-        double depo = Double.parseDouble(scan.nextLine().trim());
 
-        //vendor
+        System.out.println("Vendor: ");
+        String vendor = scan.nextLine();
 
-        //description
+        System.out.println("Description: ");
+        String description = scan.nextLine();
 
-        //using these inuts from the user to create an entry for the csv file.
-        //
+        System.out.println("Amount: ");
+        double amount = Double.parseDouble(scan.nextLine().trim());
+
+        LocalDate date = LocalDate.now();
+        LocalTime time = LocalTime.now();
+
+        Transaction newTrans = new Transaction(date, time, vendor, description, amount);
+
+        // Save this transaction to the ledger file
+        ledgerData.dataWriter(newTrans);
 
 
     }
+// Ledger menu system
+
+    static void ledgerMenu() {
+        boolean ledgerMenuRunning = true;
+
+        while (ledgerMenuRunning) {
+            System.out.println("""
+                    Please Enter an option below:
+                    
+                    A: All Entires
+                    
+                    D: Deposits Only
+                    
+                    P: Payments Only
+                    
+                    R: Reports
+                    
+                    H: Home
+                
+                    """);
+            String userInput = scan.nextLine().toUpperCase();
+
+            switch (userInput) {
+                case "A":
+                    System.out.println();
+                    break;
+
+                case "D":
+                    ledgerData.viewDeposits();
+                    break;
+
+                case "P":
+                    ledgerData.viewPayments();
+                    break;
+
+                case "R":
+                    LedgerData.reportMenu(ledgerData);
+                    break;
+
+                case "H":
+                    ledgerMenuRunning = false;
+                    break;
+
+                default:
+                    System.out.println("I don't understand." +
+                                       "\nPlease select a valid option.");
+            }
+        }
+    }
+
 
 }
